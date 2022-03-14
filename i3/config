@@ -1,0 +1,146 @@
+# minha configuracao pessoal do i3 window manager
+# Autor: Erick A. Teixeira
+# github: https://github.com/erickteixeira
+
+# setando a tecla alt esquerdo como sendo o mod/super
+set $mod Mod1
+
+# fonte usada pela barra de status e titulos de janelas (porem, eu altero a fonte da do status bar na sua parte do codigo)
+font pango:monospace 9
+
+# aplicativos e servicos de inicializacao do i3 window maneger 
+exec --no-startup-id feh --bg-fill /home/erick/Imagens/backgrounds/iamroot.png
+exec --no-startup-id polybar
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id volumeicon
+
+# execucao de lockscreen quando solicitado pelo sistema
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# execucao de nm-applet que traz a funcao de controlar as redes de internet no Arch Linux
+exec --no-startup-id nm-applet
+
+# controle de brilho
+bindsym XF86MonBrightnessUp exec light -A 10 # increase screen brightness
+bindsym XF86MonBrightnessDown exec light -U 10 # decrease screen brightness
+
+# atalhos que usam o pactl para ajustar o voume no PulseAudio
+set $refresh_bumblebee killall -SIGUSR1 bumblebee
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_bumblebee
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_bumblebee
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_bumblebee
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_bumblebee
+
+#######################################################################
+# VERIFICAR UTILIDADE DEPOIS
+# Use Mouse+$mod to drag floating windows to their wanted position
+#floating_modifier $mod
+#######################################################################
+
+# atalho que lanca meu terminal de escolha
+bindsym $mod+Return exec tilix
+
+# kill app alternativo
+bindsym $mod+q kill
+
+# atalho para o rofi (a program launcher)
+bindsym $mod+d exec rofi -show drun
+
+# atalhos para mudar de janelas com o teclado
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# atalho para mudar a localizacao do container/janela na area de trabalho onde ele(a) se encontra
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+#faz o mesmo que os comandos acima, ele fica alternando entre um e outro com o comando a seguir
+bindsym $mod+semicolon split toggle
+
+# alternativamente podemos usar a tecla F11 que é mais facilmente associada a fullscreen 
+bindsym $mod+F11 fullscreen toggle
+
+# atalho para mudar o layout do container/janelas entre (stacked, tabbed e toggle split 
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# janela flutuante do container/janela selecionado
+bindsym $mod+Shift+space floating toggle
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+
+# aqui definimos um atalho (shortcut) para cada area de trabalho que pode ser usada
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# atalho para mudar de area de trabalho (workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# mover uma janela para uma outra area de trabalho
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload arquivo de configuracao
+bindsym $mod+Shift+c reload
+# atalho para dar restart (reiniciar) o arquivo de configuracao do i3wm, utilizado geralmente quando for feitas alteracoes no arquivo de configuracao do i3wm
+bindsym $mod+Shift+r restart
+
+# para sair do i3 window manager
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# redimensionado uma janela
+bindsym $mod+r mode "resize"
+
+# modo de redimensionamento de janela 
+mode "resize" {
+
+        # bindings com as setinhas para o redimensionamento de janelas
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # bindings para sair do modo de redimensionamento
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+# statusbar para complementar o que falta no polybar como o modulo pomodoro, bateria (tempo de duracao) e analise de disco um pouco mais detalahda
+bar {
+	font pango:Incosolata 9
+	status_command ~/bumblebee-status/bumblebee-status \
+			 -t iceberg-contrast \
+       -m pomodoro brightness disk battery-upower datetime
+}
